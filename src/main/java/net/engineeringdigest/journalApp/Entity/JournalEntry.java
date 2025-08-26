@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 
 @Document( collection ="journal_Entries")
@@ -21,7 +22,9 @@ public class JournalEntry {
     @NotNull
     private String title;
     private String content;
+
     private LocalDateTime date;
+
 
 
 }
