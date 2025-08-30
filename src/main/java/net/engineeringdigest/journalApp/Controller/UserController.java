@@ -2,6 +2,7 @@ package net.engineeringdigest.journalApp.Controller;
 
 
 import net.engineeringdigest.journalApp.Entity.User;
+import net.engineeringdigest.journalApp.repository.UserRepository;
 import net.engineeringdigest.journalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/user")
 class UserController {
 
     @Autowired
     private UserService userService;
-
-
-
+    @Autowired
+    private UserRepository userRepository;
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user){
@@ -33,6 +33,11 @@ class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
+    @DeleteMapping
+    public ResponseEntity<?> deleteUserById(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userRepository.deleteByUserName(authentication.getName());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }
