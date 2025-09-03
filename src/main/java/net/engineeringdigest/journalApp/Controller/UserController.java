@@ -11,8 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/user")
 class UserController {
@@ -29,7 +27,7 @@ class UserController {
         User userIndb = userService.findByUserName(userName);
         userIndb.setUserName(user.getUserName());
         userIndb.setPassword(user.getPassword());
-        userService.saveEntry(userIndb);
+        userService.saveNewUser(userIndb);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
