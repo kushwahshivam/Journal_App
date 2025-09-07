@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp;
+package net.engineeringdigest.journalApp.service;
 
 import net.engineeringdigest.journalApp.Entity.User;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -13,6 +13,7 @@ public class UserArgumentProvider implements ArgumentsProvider {
         return Stream.of(
                 Arguments.of(User.builder().userName("ededede").password("shyam").build()),
                 Arguments.of(User.builder().userName("ededed").password("").build())
+
         );
     }
 }

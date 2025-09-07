@@ -1,7 +1,6 @@
 package net.engineeringdigest.journalApp.service;
 
 import net.engineeringdigest.journalApp.Entity.User;
-import net.engineeringdigest.journalApp.UserArgumentProvider;
 import net.engineeringdigest.journalApp.repository.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
