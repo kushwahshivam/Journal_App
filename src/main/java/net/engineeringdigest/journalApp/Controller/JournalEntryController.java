@@ -46,7 +46,7 @@ class JournalEntryController {
         try {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-            journalEntryService.addEntry(journalEntry,userName);
+            journalEntryService.saveEntry(journalEntry,userName);
             return new ResponseEntity<>(journalEntry,HttpStatus.CREATED);
         }
         catch (Exception e) {
@@ -96,7 +96,7 @@ class JournalEntryController {
                 JournalEntry oldEntry = journalEntry.get();
                 oldEntry.setTitle(newEntry.getTitle()!=null && !newEntry.getTitle().equals("")?newEntry.getTitle():oldEntry.getTitle());
                 oldEntry.setContent(newEntry.getContent()!=null && !newEntry.getContent().equals("")?newEntry.getContent():oldEntry.getContent());
-                journalEntryService.saveJournalEntry(oldEntry);
+                journalEntryService.saveEntry(oldEntry);
                 return new ResponseEntity<>(oldEntry,HttpStatus.OK);
             }
         }

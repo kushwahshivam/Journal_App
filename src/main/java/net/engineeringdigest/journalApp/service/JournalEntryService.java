@@ -4,6 +4,8 @@ import net.engineeringdigest.journalApp.Entity.JournalEntry;
 import net.engineeringdigest.journalApp.Entity.User;
 import net.engineeringdigest.journalApp.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 
 @Component
 public class JournalEntryService {
@@ -21,16 +24,21 @@ public class JournalEntryService {
     @Autowired
     public UserService userService;
 
-    @Transactional
-    public void addEntry(JournalEntry journalEntry, String userName){
-        User user = userService.findByUserName(userName);
-        journalEntry.setDate(LocalDateTime.now());
-        JournalEntry saved = journalEntryRepository.save(journalEntry);
-        user.getJournalEntries().add(saved);
-        userService.saveNewUser(user);
 
+
+    @Transactional
+    public void saveEntry(JournalEntry journalEntry, String userName){
+        try {
+            User user = userService.findByUserName(userName);
+            journalEntry.setDate(LocalDateTime.now());
+            JournalEntry saved = journalEntryRepository.save(journalEntry);
+            user.getJournalEntries().add(saved);
+            userService.saveNewUser(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving journal entry", e);
+        }
     }
-    public void saveJournalEntry(JournalEntry journalEntry){
+    public void saveEntry(JournalEntry journalEntry){
         journalEntryRepository.save(journalEntry);
 
     }
