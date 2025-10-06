@@ -1,27 +1,56 @@
 package net.engineeringdigest.journalApp.service;
 
 import net.engineeringdigest.journalApp.api.response.WeatherResponse;
+import net.engineeringdigest.journalApp.cache.AppCache;
+import net.engineeringdigest.journalApp.constants.Placeholders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Component
+@Service
 public class WeatherService {
 
     @Value("${weather.api.key}")
     private String apiKey;
-    private  static  final  String api = "http://api.weatherapi.com/v1/current.json?key=API_KEY&q=CITY&aqi=no";
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
-    public WeatherResponse getWeather(String city){
-        String finalApi = api.replace("API_KEY",apiKey).replace("CITY",city);
-        ResponseEntity<WeatherResponse> response = restTemplate.exchange(finalApi, HttpMethod.GET, null, WeatherResponse.class);
-        return response.getBody();
+    @Autowired
+    private AppCache appCache;
+
+    /**
+     * Fetch weather for the given city.
+     * Uses AppCache for API URL template. Does not use Redis.
+     */
+    public WeatherResponse getWeather(String city) {
+        // 1️⃣ Get API template from cache
+        String apiTemplate = appCache.appCache.get(AppCache.keys.WEATHER_API.toString());
+        if (apiTemplate == null || apiTemplate.isEmpty()) {
+            throw new RuntimeException("Weather API URL not found in AppCache");
+        }
+
+        // 2️⃣ Replace placeholders
+        String finalAPI = apiTemplate
+                .replace(Placeholders.CITY, city)
+                .replace(Placeholders.API_KEY, apiKey);
+
+        try {
+            // 3️⃣ Call Weather API
+            ResponseEntity<WeatherResponse> response = restTemplate.exchange(finalAPI, HttpMethod.GET, null, WeatherResponse.class);
+
+            // 4️⃣ Check response
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("Failed to fetch weather: HTTP " + response.getStatusCode());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Exception while calling Weather API: " + e.getMessage(), e);
+        }
     }
-
 }

@@ -25,6 +25,8 @@ public class AppCache {
     @PostConstruct
     public void init(){
         appCache = new HashMap<>();
+//        appCache.put(
+//                "WEATHER_API","http://api.weatherapi.com/v1/current.json?key=API_KEY&q=CITY&aqi=no");
         List<ConfigJournalAppEntity> all = configJournalAppRepository.findAll();
         for (ConfigJournalAppEntity configJournalAppEntity : all) {
             appCache.put(configJournalAppEntity.getKey(), configJournalAppEntity.getValue());

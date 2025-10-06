@@ -32,7 +32,7 @@ public class UserScheduler {
     @Autowired
     private emailService emailService;
 
-    @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     public void fetchUserAndSendSaMail(){
 
         List<User> users = userRepository.getUserForSA();
