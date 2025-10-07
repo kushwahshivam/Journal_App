@@ -22,12 +22,8 @@ public class WeatherService {
     @Autowired
     private AppCache appCache;
 
-    /**
-     * Fetch weather for the given city.
-     * Uses AppCache for API URL template. Does not use Redis.
-     */
+
     public WeatherResponse getWeather(String city) {
-        // 1️⃣ Get API template from cache
         String apiTemplate = appCache.appCache.get(AppCache.keys.WEATHER_API.toString());
         if (apiTemplate == null || apiTemplate.isEmpty()) {
             throw new RuntimeException("Weather API URL not found in AppCache");
@@ -42,8 +38,7 @@ public class WeatherService {
             // 3️⃣ Call Weather API
             ResponseEntity<WeatherResponse> response = restTemplate.exchange(finalAPI, HttpMethod.GET, null, WeatherResponse.class);
 
-            // 4️⃣ Check response
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            if (response.getBody() != null) {
                 return response.getBody();
             } else {
                 throw new RuntimeException("Failed to fetch weather: HTTP " + response.getStatusCode());
