@@ -22,30 +22,23 @@ public class WeatherService {
     @Autowired
     private AppCache appCache;
 
+    @Autowired
+    private RedisService redisService;
 
     public WeatherResponse getWeather(String city) {
-        String apiTemplate = appCache.appCache.get(AppCache.keys.WEATHER_API.toString());
-        if (apiTemplate == null || apiTemplate.isEmpty()) {
-            throw new RuntimeException("Weather API URL not found in AppCache");
+        WeatherResponse weatherResponse = redisService.get("Weather_of" + city, WeatherResponse.class);
+        if (weatherResponse != null) {
+            return weatherResponse;
         }
-
-        // 2️⃣ Replace placeholders
-        String finalAPI = apiTemplate
-                .replace(Placeholders.CITY, city)
-                .replace(Placeholders.API_KEY, apiKey);
-
-        try {
-            // 3️⃣ Call Weather API
+        else{
+            String apiTemplate = appCache.appCache.get(AppCache.keys.WEATHER_API.toString());
+            String finalAPI = apiTemplate.replace(Placeholders.CITY, city).replace(Placeholders.API_KEY, apiKey);
             ResponseEntity<WeatherResponse> response = restTemplate.exchange(finalAPI, HttpMethod.GET, null, WeatherResponse.class);
+            WeatherResponse body = response.getBody();
+            redisService.set("Weather_of"+ city,body,300L);
 
-            if (response.getBody() != null) {
-                return response.getBody();
-            } else {
-                throw new RuntimeException("Failed to fetch weather: HTTP " + response.getStatusCode());
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException("Exception while calling Weather API: " + e.getMessage(), e);
+            return body;
         }
+
     }
 }
