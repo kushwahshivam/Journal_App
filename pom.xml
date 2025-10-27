@@ -110,6 +110,16 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Maven dependency -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.14</version>  <!-- compatible with Java 8 -->
+        </dependency>
+
+
+
+
     </dependencies>
 
 	<build>

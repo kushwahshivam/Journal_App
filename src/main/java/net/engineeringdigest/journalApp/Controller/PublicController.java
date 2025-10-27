@@ -1,5 +1,6 @@
 package net.engineeringdigest.journalApp.Controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import net.engineeringdigest.journalApp.Entity.User;
 import net.engineeringdigest.journalApp.service.UserDetailsServiceImpl;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/public")
 @Slf4j
+@Tag(name = "1. Auth API", description = "User signup and login endpoints")
 public class PublicController {
 
     @Autowired

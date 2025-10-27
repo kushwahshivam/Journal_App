@@ -1,6 +1,7 @@
 package net.engineeringdigest.journalApp.Controller;
 
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.engineeringdigest.journalApp.Entity.JournalEntry;
 import net.engineeringdigest.journalApp.Entity.User;
 import net.engineeringdigest.journalApp.service.JournalEntryService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Tag(name = "JournalEntry APIs")
 @RestController
 @RequestMapping("/journal")
 class JournalEntryController {
